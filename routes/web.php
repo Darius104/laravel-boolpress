@@ -13,10 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware('auth') // i controller che fanno parte di 'auth' saranno private
+    ->namespace('Admin') // cercare i namespace dentro la cartella admin
+    ->name('admin.')  // tutte le rotte protette nell'area admin devono iniziare le rotte con admin.
+    ->prefix('admin')   // tutte le rotte devono iniziare con /admin ecc...
+    ->group(function(){
+        // tutte le rotte private
+        Route::get('/', 'HomeController@index')->name('home');
+    });
+
+Route::get('{any?}', function(){
+    return view('guests.home');
+})->where('any','.*');
