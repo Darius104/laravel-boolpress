@@ -22,6 +22,7 @@ Route::middleware('auth') // i controller che fanno parte di 'auth' saranno priv
     ->group(function(){
         // tutte le rotte private
         Route::get('/', 'HomeController@index')->name('home');
+        Route::resource('posts', 'PostController');
     });
 
 Route::get('{any?}', function(){
