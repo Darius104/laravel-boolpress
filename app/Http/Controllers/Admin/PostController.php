@@ -97,9 +97,14 @@ class PostController extends Controller
     {
         $form_data = $request->all();
         $request->validate($this->getValidationRules());
-        $form_data['slug'] = $this->getUniqueSlugFromTitle($form_data['title']);
-        
         $post = Post::findOrFail($id);
+
+        //vado ad aggiornare lo slug  solo se l'utente modifica il titolo
+        if( $form_data['title'] != $post->title ){
+            $form_data['slug'] = $this->getUniqueSlugFromTitle($form_data['title']);
+        }
+        
+        
         $post->update($form_data);
         
         return redirect()->route('admin.posts.show', ['post' => $post->id]);
