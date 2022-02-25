@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post; // richiamiamo il model per prendere / scrivere i dati nel database
+use App\Category;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -31,7 +32,11 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        $data = [
+            'categories' => $categories
+        ];
+        return view('admin.posts.create', $data);
     }
 
     /**
@@ -128,7 +133,8 @@ class PostController extends Controller
     protected function getValidationRules(){
         return[
             'title' => 'required|max:255',
-            'content' => 'required'
+            'content' => 'required',
+            'category_id' => 'exists:categories,id|nullable'
         ];
     }
 
