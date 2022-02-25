@@ -8,6 +8,10 @@
             <strong> Slug: {{ $post->slug }} </strong>
         </div>
 
+        <div>
+            <strong> Categoria: {{ $post->category ? $post->category->name : 'Nessuna' }} </strong>
+        </div>
+
         <p>{{ $post->content }}</p>
 
         <div>
