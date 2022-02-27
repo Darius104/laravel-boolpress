@@ -12,6 +12,15 @@
             <strong> Categoria: {{ $post->category ? $post->category->name : 'Nessuna' }} </strong>
         </div>
 
+        <div>
+            <strong> Tags: </strong>
+            @forelse ($post->tags as $tag)
+                {{ $tag->name }}{{ $loop->last ? ' ' : ', ' }}
+            @empty
+                Nessuno
+            @endforelse
+        </div>
+
         <p>{{ $post->content }}</p>
 
         <div>
