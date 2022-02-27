@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post; // richiamiamo il model per prendere / scrivere i dati nel database
+use App\Tag;
 use App\Category;
 use Illuminate\Support\Str;
 
@@ -33,8 +34,10 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
         $data = [
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
         ];
         return view('admin.posts.create', $data);
     }
@@ -50,12 +53,18 @@ class PostController extends Controller
         $form_data = $request->all();
 
         $request->validate($this->getValidationRules());
+
         $new_post = new Post();
         $new_post->fill($form_data);
 
         $new_post->slug = $this->getUniqueSlugFromTitle($form_data['title']);
 
         $new_post->save();
+
+        // save tags relations
+        if(isset($form_data['tags'])){
+            $new_post->tags()->sync($form_data['tags']);
+        }
 
         return redirect()->route('admin.posts.show', ['post' => $new_post->id]);
     }
@@ -136,7 +145,8 @@ class PostController extends Controller
         return[
             'title' => 'required|max:255',
             'content' => 'required',
-            'category_id' => 'exists:categories,id|nullable'
+            'category_id' => 'exists:categories,id|nullable',
+            'tags' => 'exists:tags,id'
         ];
     }
 
