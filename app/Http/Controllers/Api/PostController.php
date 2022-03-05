@@ -18,7 +18,7 @@ class PostController extends Controller
     }
 
     public function show($slug){
-        $post = Post::where('slug', '=', $slug)->first();
+        $post = Post::where('slug', '=', $slug)->with('category', 'tags')->first();
         
         // se il contenuto che cerco esiste allora faccio vedere il l'oggetto
         if($post){
