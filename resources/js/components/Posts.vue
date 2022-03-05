@@ -12,7 +12,9 @@
               <p class="card-text">
                 {{ cutText(post.content, 50) }}
               </p>
-              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+              <div>
+                <router-link class="nav-link" :to="{ name: 'post-details', params: { slug: post.slug } }">Leggi</router-link>
+              </div>
             </div>
           </div>
         </div>
