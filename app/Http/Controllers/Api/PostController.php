@@ -16,4 +16,22 @@ class PostController extends Controller
             'results' =>  $posts
         ]);
     }
+
+    public function show($slug){
+        $post = Post::where('slug', '=', $slug)->first();
+        
+        // se il contenuto che cerco esiste allora faccio vedere il l'oggetto
+        if($post){
+            return response()->json([
+                'success' => true,
+                'results' => $post
+            ]);
+        } else {
+            // altrimenti faccio vedere un array vuoto
+            return response()->json([
+                'success' => false,
+                'results' => []
+            ]);
+        }
+    }
 }
