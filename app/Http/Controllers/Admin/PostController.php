@@ -8,6 +8,7 @@ use App\Post; // richiamiamo il model per prendere / scrivere i dati nel databas
 use App\Tag;
 use App\Category;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -58,6 +59,12 @@ class PostController extends Controller
         $new_post->fill($form_data);
 
         $new_post->slug = $this->getUniqueSlugFromTitle($form_data['title']);
+
+        //gestione immagine del post
+        //mettere l'immagine caricata nella cartella di storage
+        $img_path = Storage::put('post_covers', $form_data['image']);
+        dd($img_path);
+        //salvare il path nel database
 
         $new_post->save();
 
