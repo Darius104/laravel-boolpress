@@ -2766,6 +2766,13 @@ var render = function () {
         _vm._l(_vm.posts, function (post) {
           return _c("div", { key: post.id, staticClass: "col" }, [
             _c("div", { staticClass: "card my-3" }, [
+              post.cover
+                ? _c("img", {
+                    staticClass: "card-img-top",
+                    attrs: { src: post.cover, alt: post.title },
+                  })
+                : _vm._e(),
+              _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
                 _c("h5", { staticClass: "card-title" }, [
                   _vm._v(_vm._s(post.title)),

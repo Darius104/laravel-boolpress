@@ -20,6 +20,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
+
         $data = [
            'posts' => $posts
         ];
@@ -61,11 +62,12 @@ class PostController extends Controller
         $new_post->slug = $this->getUniqueSlugFromTitle($form_data['title']);
 
         //gestione immagine del post
-        //mettere l'immagine caricata nella cartella di storage
-        $img_path = Storage::put('post_covers', $form_data['image']);
-        dd($img_path);
-        //salvare il path nel database
-
+        if(isset($form_data['image'])){
+            //mettere l'immagine caricata nella cartella di storage
+            $img_path = Storage::put('post_covers', $form_data['image']);
+            //salvare il path nel database
+            $new_post->cover = $img_path;
+        }
         $new_post->save();
 
         // save tags relations
@@ -130,7 +132,17 @@ class PostController extends Controller
             $form_data['slug'] = $this->getUniqueSlugFromTitle($form_data['title']);
         }
         
-        
+        if($form_data['image']){
+            // Cancello il file vecchio
+            Storage::delete($post->cover);
+
+            // Faccio l'upload del nuovo file
+            $img_path = Storage::put('post_covers', $form_data['image']);
+
+            // Salvo nella colonna cover il path al nuovo file
+            $form_data['cover'] = $img_path;
+        }    
+    
         $post->update($form_data);
         
         if(isset($form_data['tags'])){
@@ -155,6 +167,9 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->tags()->sync([]);
+        if($post->cover){
+            Storage::delete($post->cover);
+        }
         $post->delete();
 
         return redirect()->route('admin.posts.index');
@@ -165,7 +180,9 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id' => 'exists:categories,id|nullable',
-            'tags' => 'exists:tags,id'
+            'tags' => 'exists:tags,id',
+            'image' => 'image',
+            'image' => 'file|max:512'
         ];
     }
 

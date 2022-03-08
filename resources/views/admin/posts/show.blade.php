@@ -3,6 +3,12 @@
 @section('content')
     <section>
         <h1>{{ $post->title }}</h1>
+        
+        @if ($post->cover)
+            <div>
+                <img width="1000 px" src="{{ asset('storage/' . $post->cover) }}" alt="{{ $post->title }}">
+            </div>
+        @endif
 
         <div>
             <strong> Slug: {{ $post->slug }} </strong>
